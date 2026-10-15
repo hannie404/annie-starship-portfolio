@@ -6,6 +6,8 @@
 
 A cinematic **3D space-voyage portfolio** served by a low-level HTTP + WebSocket server written in the **Bonezegei Scripting Language (BSL v1.3.3)**. The page opens with a hyperspace jump. As you scroll, a starship flies across the Milky Way: past a ringed gas giant, an ocean world, an asteroid field and an orbital station, ending at Sagittarius A*, the black hole at the center of the galaxy (about 26,000 light-years from Earth). A live Comms terminal talks to the BSL WebSocket server.
 
+**Live demo:** https://annie-starship-portfolio.vercel.app (static copy on Vercel; the Comms terminal goes live only with `bzg run` on localhost)
+
 ![Portfolio hero](screenshots/preview-hero.jpg)
 
 ---

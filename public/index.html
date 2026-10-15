@@ -631,7 +631,8 @@ footer b{color:var(--gold);font-weight:400}
 
   let ws = null, tries = 0;
   const connect = () => {
-    if (!/^https?:$/.test(location.protocol) || !location.host) { setDot('Offline', 'bad'); out('No BSL server here. Run `bzg run` and open http://localhost:8000 to go live.', 'err'); return; }
+    const local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === 'http:';
+    if (!/^https?:$/.test(location.protocol) || !location.host || !local) { setDot('Offline', 'bad'); out('Live chat runs on the Bonezegei server. Clone the repo, run `bzg run`, and open http://localhost:8000 to go live. Local commands work here.', 'err'); return; }
     const url = (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host;
     try { ws = new WebSocket(url); } catch (e) { setDot('Offline','bad'); out('WebSocket is blocked in this viewer. Local commands still work.', 'err'); return; }
     setDot('Connecting');
