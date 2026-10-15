@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 · Lost in Space</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=JetBrains+Mono&display=swap">
+<style>
+  :root{color-scheme:dark;--void:#04060c;--ink:#eef1f7;--dim:#8f98ad;--gold:#f2c46d;--ion:#7cc4ff}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:grid;place-content:center;gap:1.1rem;padding:2rem max(16px,env(safe-area-inset-left,0px));text-align:center;color:var(--ink);font-family:"JetBrains Mono",ui-monospace,monospace;
+    background:radial-gradient(1px 1px at 20% 30%,#fff,transparent),radial-gradient(1px 1px at 70% 60%,#cfe0ff,transparent),radial-gradient(1.5px 1.5px at 40% 80%,#fff,transparent),radial-gradient(1px 1px at 85% 20%,#ffe9c2,transparent),radial-gradient(1px 1px at 10% 70%,#fff,transparent),
+      linear-gradient(160deg,transparent 35%,rgba(124,140,200,.12) 50%,transparent 65%),var(--void)}
+  h1{margin:0;font-family:"Michroma",system-ui,sans-serif;font-weight:400;font-size:clamp(4rem,18vw,9rem);line-height:1;color:var(--gold);letter-spacing:.08em;animation:drift 6s ease-in-out infinite}
+  @keyframes drift{50%{transform:translateY(-10px) rotate(-1.5deg)}}
+  p{margin:0;color:var(--dim);letter-spacing:.08em}
+  a{color:var(--ion)}
+  @media (prefers-reduced-motion:reduce){h1{animation:none}}
+</style>
+</head>
+<body>
+  <h1>404</h1>
+  <p>LOST IN SPACE · no star system at these coordinates.</p>
+  <p><a href="/">› return to the flight path</a></p>
+</body>
+</html>

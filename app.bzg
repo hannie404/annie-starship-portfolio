@@ -1,0 +1,50 @@
+include("lib/http.bzg");
+
+// Annie-Neshreen Ibrahim · 3D space-voyage e-portfolio
+// CCC181 Laboratory 1 · served with Bonezegei Scripting Language v1.3.3
+var server = http(8000);
+
+// ==========================================
+// HTTP EVENT HANDLERS
+// ==========================================
+// The whole portfolio (HTML, CSS, JS, 3D scene) lives in public/index.html.
+// Three.js and GSAP load from pinned CDN versions, so this one route serves everything.
+server.get = function (path, data){
+   print("get loc:" + path );
+   if(path == "/"){
+     server.sendFile("public/index.html");
+   }
+   else{
+     server.sendFile("public/404.html");
+   }
+};
+
+// ==========================================
+// WEBSOCKET (WS) EVENT HANDLERS
+// Powers the Comms terminal in the Contact section.
+// ==========================================
+
+// Triggered when a browser opens the page and the Comms terminal connects
+server.onConnect = function (clientId) {
+   print("WebSocket connected! Client ID: " + clientId);
+   server.send(clientId, "Welcome aboard, ship #" + clientId + ". Comms channel open.");
+};
+
+// Triggered when a visitor sends a message from the terminal
+server.onData = function (message, clientId) {
+   print("Received from Client " + clientId + ": " + message);
+   if(message == "ping"){
+     server.send(clientId, "pong");
+   }
+   else{
+     // Broadcast to everyone who has the portfolio open
+     server.sendAll("ship #" + clientId + ": " + message);
+   }
+};
+
+// Triggered when a visitor closes the page
+server.onDisconnect = function (clientId) {
+   print("WebSocket disconnected! Client ID: " + clientId);
+};
+
+server.run();

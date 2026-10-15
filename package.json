@@ -1,0 +1,14 @@
+{
+ "name": "annie-cyberpunk-portfolio",
+ "version": "1.0.0",
+ "description": "3D space-voyage personal portfolio served by a Bonezegei (BSL v1.3.3) HTTP + WebSocket server",
+ "main": "app.bzg",
+ "scripts": {
+ "start": "bonezegei app.bzg"
+ },
+ "dependencies": {
+ "http": "^1.0.0"
+ },
+ "author": "Annie-Neshreen Ibrahim",
+ "license": "MIT"
+}

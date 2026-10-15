@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Annie Neshreen Starship Log</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Annie-Neshreen Ibrahim, software engineer and UI/UX designer from Iligan City, Philippines. A 3D space-voyage e-portfolio served by Bonezegei Scripting Language.">
+<meta property="og:title" content="Annie-Neshreen Ibrahim · Software Engineer">
+<meta property="og:description" content="Full-stack engineer building AI-powered, multi-channel and civic-tech platforms.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#04060c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2304060c'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23f2c46d'/%3E%3Cellipse cx='16' cy='16' rx='13' ry='4' fill='none' stroke='%237cc4ff' stroke-width='1.6' transform='rotate(-20 16 16)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=Saira:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a fixed WebGL voyage across the Milky Way behind everything. Content sits on quiet glass consoles, left-weighted, so the ship and planets get the right side of the screen. */
+:root{
+  color-scheme: dark;
+  --void:#04060c;          /* deep space */
+  --glass:rgba(6,10,20,.78);
+  --ink:#eef1f7;           /* starlight text */
+  --dim:#8f98ad;           /* secondary text */
+  --gold:#f2c46d;          /* primary accent, sunlight */
+  --ion:#7cc4ff;           /* engine blue */
+  --line:rgba(124,196,255,.16);
+  --line-strong:rgba(124,196,255,.32);
+  --f-display:"Michroma","Eurostile","Arial Black",system-ui,sans-serif;
+  --f-body:"Saira","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --s0:1rem; --s1:1.2rem; --s2:1.35rem;
+  --gutter-l:max(16px, env(safe-area-inset-left,0px));
+  --gutter-r:max(16px, env(safe-area-inset-right,0px));
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--void)}
+body{margin:0;background:var(--void);color:var(--ink);font-family:var(--f-body);font-weight:400;font-size:var(--s0);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:var(--ion)}
+::selection{background:var(--gold);color:var(--void)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+/* ---------- background ---------- */
+#space{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+.no-webgl #space{display:none}
+.no-webgl .bg-fallback{display:block}
+.bg-fallback{display:none;position:fixed;inset:0;z-index:0;background:
+  radial-gradient(40% 18% at 60% 45%,rgba(242,196,109,.16),transparent 70%),
+  linear-gradient(160deg,transparent 35%,rgba(124,140,200,.12) 50%,transparent 65%),var(--void)}
+.vignette{pointer-events:none;position:fixed;inset:0;z-index:2;background:radial-gradient(130% 100% at 60% 45%,transparent 60%,rgba(0,0,0,.55))}
+
+/* ---------- boot ---------- */
+#boot{position:fixed;inset:0;z-index:50;background:var(--void);display:grid;place-content:center;padding-left:var(--gutter-l);padding-right:var(--gutter-r);font-family:var(--f-mono);font-size:.8rem;color:var(--ion);transition:opacity .7s, visibility .7s}
+#boot.done{opacity:0;visibility:hidden}
+#boot pre{margin:0;white-space:pre-wrap;max-width:34rem;min-height:9em;color:var(--dim)}
+#boot pre b{color:var(--ion);font-weight:400}
+#boot .bar{margin-top:1rem;height:2px;width:min(34rem,80vw);background:rgba(124,196,255,.15)}
+#boot .bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .15s}
+#boot .pct{margin-top:.6rem;color:var(--gold);display:flex;justify-content:space-between;letter-spacing:.12em}
+#boot button{margin-top:1.4rem;justify-self:start;background:none;border:1px solid var(--line-strong);color:var(--dim);font:inherit;padding:.35rem .8rem;cursor:pointer}
+
+/* ---------- HUD ---------- */
+.hud{position:fixed;top:0;left:0;right:0;z-index:20;padding-top:env(safe-area-inset-top,0px);padding-left:var(--gutter-l);padding-right:var(--gutter-r);background:linear-gradient(180deg,rgba(4,6,12,.9),rgba(4,6,12,0))}
+.hud-in{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:1.5rem;height:64px}
+.logo{font-family:var(--f-display);font-size:.82rem;letter-spacing:.22em;color:var(--ink);text-decoration:none;white-space:nowrap;display:flex;align-items:center;gap:.6rem}
+.logo i{width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
+.hud nav{display:flex;gap:.2rem;margin-left:auto}
+.hud nav a{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:.45rem .65rem;position:relative}
+.hud nav a:hover,.hud nav a.on{color:var(--ink)}
+.hud nav a.on::after{content:"";position:absolute;left:50%;bottom:.1rem;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--gold)}
+.hud .meta{font-family:var(--f-mono);font-size:.68rem;color:var(--dim);text-align:right;line-height:1.4;white-space:nowrap}
+.hud .meta b{color:var(--gold);font-weight:400}
+.rail{position:fixed;z-index:20;right:max(20px,calc(env(safe-area-inset-right,0px) + 20px));top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:.7rem;font-family:var(--f-mono);font-size:.66rem;color:var(--dim)}
+.rail .track{width:1px;height:150px;background:rgba(255,255,255,.12);position:relative}
+.rail .track i{position:absolute;left:0;top:0;width:100%;height:0;background:var(--gold)}
+.rail .track b{position:absolute;left:-3px;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold);top:0;margin-top:-3px}
+.rail .num{color:var(--gold)}
+.rail .ly{writing-mode:vertical-rl;letter-spacing:.18em;font-variant-numeric:tabular-nums}
+
+/* ---------- layout ---------- */
+main{position:relative;z-index:5}
+.band{padding-left:var(--gutter-l);padding-right:var(--gutter-r);padding-block:clamp(5rem,15vh,10rem)}
+.wrap{max-width:1240px;margin:0 auto}
+.eyebrow{justify-self:start;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:.8rem}
+.eyebrow::before{content:"";width:28px;height:1px;background:var(--gold)}
+.sec-head{display:grid;gap:1rem;margin-bottom:2.6rem;max-width:46rem}
+.sec-head h2{font-family:var(--f-display);font-weight:400;font-size:clamp(1.6rem,3.8vw,2.7rem);line-height:1.15;margin:0;text-wrap:balance;letter-spacing:.02em;text-shadow:0 2px 24px rgba(4,6,12,.9)}
+.sec-head h2 em{font-style:normal;color:var(--gold)}
+.sec-head p{margin:0;color:var(--dim);max-width:60ch;text-shadow:0 1px 12px rgba(4,6,12,.95)}
+.panel{position:relative;background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:3px}
+.panel::before{content:"";position:absolute;inset:-1px;pointer-events:none;border-radius:3px;
+  background:
+   linear-gradient(var(--gold),var(--gold)) top left/14px 1px no-repeat,
+   linear-gradient(var(--gold),var(--gold)) top left/1px 14px no-repeat,
+   linear-gradient(var(--gold),var(--gold)) bottom right/14px 1px no-repeat,
+   linear-gradient(var(--gold),var(--gold)) bottom right/1px 14px no-repeat;opacity:.7}
+.mono{font-family:var(--f-mono)}
+
+/* ---------- hero ---------- */
+.hero{min-height:min(100svh,960px);display:flex;align-items:center;padding-top:calc(96px + env(safe-area-inset-top,0px));overflow-x:clip}
+.hero .wrap{width:100%;position:relative}
+.hero .wrap::before{content:"";position:absolute;z-index:-1;inset:-8rem -40vw -6rem -40vw;background:radial-gradient(50% 65% at 24% 50%,rgba(4,6,12,.7),rgba(4,6,12,.25) 60%,transparent 80%);pointer-events:none}
+.hero .kicker{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.2em;color:var(--ion);text-transform:uppercase;display:flex;flex-wrap:wrap;gap:.4rem 1.6rem}
+.hero h1{font-family:var(--f-display);font-weight:400;font-size:clamp(1.85rem,6vw,5.2rem);line-height:1.04;margin:1.3rem 0 1.5rem;letter-spacing:.04em;text-transform:uppercase;text-wrap:balance;text-shadow:0 4px 40px rgba(4,6,12,.8)}
+.hero h1 .l2{display:block;color:var(--gold);letter-spacing:.16em}
+.hero .lede{max-width:38rem;font-size:var(--s1);font-weight:300;line-height:1.55;margin:0 0 .7rem;text-shadow:0 1px 14px rgba(4,6,12,.95)}
+.hero .roles{font-family:var(--f-mono);color:var(--dim);font-size:.86rem;min-height:1.6em;margin:0 0 2.2rem;text-shadow:0 1px 12px rgba(4,6,12,.95)}
+.hero .roles b{color:var(--ion);font-weight:400;display:inline-block}
+.cta{display:flex;flex-wrap:wrap;gap:.9rem}
+.btn{font-family:var(--f-mono);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:.78rem;color:var(--void);background:var(--gold);text-decoration:none;padding:1rem 1.5rem;border:0;border-radius:2px;cursor:pointer;display:inline-flex;align-items:center;gap:.7rem;transition:box-shadow .25s, transform .25s;will-change:transform}
+.btn:hover{box-shadow:0 0 30px rgba(242,196,109,.45)}
+.btn.ghost{background:rgba(4,6,12,.4);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-strong)}
+.btn.ghost:hover{box-shadow:inset 0 0 0 1px var(--ion),0 0 24px rgba(124,196,255,.2)}
+.readout{margin-top:3.4rem;display:grid;grid-template-columns:repeat(4,minmax(0,max-content));gap:1rem 2.8rem}
+.readout div{display:grid;gap:.2rem;border-left:1px solid var(--line-strong);padding-left:1rem}
+.readout b{font-family:var(--f-display);font-weight:400;font-size:1.9rem;line-height:1;font-variant-numeric:tabular-nums;text-shadow:0 1px 14px rgba(4,6,12,.9)}
+.readout span{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.scroll-cue{margin-top:3.2rem;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.22em;color:var(--dim);display:flex;align-items:center;gap:.8rem}
+.scroll-cue i{width:1px;height:34px;background:linear-gradient(var(--gold),transparent);animation:cue 2s infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------- profile ---------- */
+.profile-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem}
+.profile-grid>*{min-width:0}
+.bio{padding:2rem 2.1rem}
+.bio p{margin:0 0 1rem;max-width:62ch;font-weight:300;font-size:1.04rem}
+.bio p:last-child{margin:0}
+.idcard{padding:1.7rem 1.9rem;display:grid;gap:1.2rem;align-content:start}
+.idcard dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.6rem 1.2rem;font-size:.95rem}
+.idcard dt{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);padding-top:.25rem}
+.idcard dd{margin:0}
+.label{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.2em;color:var(--ion);text-transform:uppercase;margin:0;font-weight:400}
+.edu{padding:1.7rem 1.9rem;grid-column:1 / -1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.4rem}
+.edu .label{grid-column:1/-1}
+.edu div{border-left:1px solid var(--line-strong);padding-left:1rem}
+.edu b{display:block;font-weight:500}
+.edu span{color:var(--dim);font-size:.92rem}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip{font-family:var(--f-mono);font-size:.72rem;padding:.28rem .6rem;border:1px solid var(--line);border-radius:2px;color:var(--ink);background:rgba(124,196,255,.04);white-space:nowrap}
+.chip.key{border-color:rgba(242,196,109,.45);color:var(--gold);background:rgba(242,196,109,.06)}
+
+/* ---------- systems ---------- */
+.loadout{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.6rem}
+.loadout .chip{font-size:.82rem;padding:.42rem .8rem}
+.mods{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+.mod{padding:1.3rem 1.35rem 1.45rem;display:grid;gap:.95rem;align-content:start;transition:border-color .3s, transform .3s}
+.mod:hover{border-color:var(--line-strong);transform:translateY(-3px)}
+.mod header{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem}
+.mod h3{margin:0;font-family:var(--f-display);font-weight:400;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase}
+.mod header span{font-family:var(--f-mono);font-size:.68rem;color:var(--gold)}
+
+/* ---------- mission log ---------- */
+.ops{display:grid;gap:1rem}
+.op{display:grid;grid-template-columns:14rem 1fr;gap:1.8rem;padding:1.6rem 1.9rem}
+.op>*{min-width:0}
+.op .who{display:grid;gap:.35rem;align-content:start}
+.op .who b{font-family:var(--f-display);font-weight:400;font-size:.95rem;letter-spacing:.04em;line-height:1.35}
+.op .who span{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ion)}
+.op .who em{font-style:normal;font-family:var(--f-mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);justify-self:start;margin-top:.35rem;border:1px solid rgba(242,196,109,.4);padding:.05rem .45rem;border-radius:2px}
+.op ul{margin:0;padding:0;list-style:none;display:grid;gap:.5rem}
+.op li{padding-left:1.4rem;position:relative;max-width:72ch;font-weight:300}
+.op li::before{content:"";position:absolute;left:0;top:.72em;width:7px;height:1px;background:var(--gold)}
+
+/* ---------- fleet ---------- */
+.feat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.1rem;perspective:1100px}
+.card{--rx:0deg;--ry:0deg;display:grid;grid-template-rows:auto auto 1fr auto auto;gap:.85rem;padding:1.6rem;text-decoration:none;color:var(--ink);transform:rotateX(var(--rx)) rotateY(var(--ry));transition:transform .15s ease-out,border-color .3s;overflow:hidden}
+.card:hover{border-color:var(--line-strong)}
+.card .glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(280px circle at var(--mx,50%) var(--my,50%),rgba(124,196,255,.12),transparent 60%);opacity:0;transition:opacity .3s}
+.card:hover .glow{opacity:1}
+.card .top{display:flex;justify-content:space-between;align-items:center;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+.card .top b{color:var(--gold);font-weight:400}
+.card h3{margin:0;font-family:var(--f-display);font-weight:400;font-size:var(--s2);letter-spacing:.03em;line-height:1.2}
+.card p{margin:0;color:var(--dim);font-size:.95rem}
+.card .go{font-family:var(--f-mono);font-size:.74rem;color:var(--ion);display:flex;justify-content:space-between;align-items:center;gap:.8rem;border-top:1px solid var(--line);padding-top:.85rem;overflow-wrap:anywhere}
+.card .go span:last-child{transition:transform .25s}
+.card:hover .go span:last-child{transform:translateX(5px)}
+.archive{margin-top:2.6rem;padding:1.7rem 1.9rem}
+.archive header{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.6rem;margin-bottom:1rem}
+.archive header a{font-family:var(--f-mono);font-size:.76rem}
+.arch-list{list-style:none;margin:0;padding:0;columns:3 15rem;column-gap:2.2rem}
+.arch-list li{break-inside:avoid;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;gap:1rem;font-size:.93rem}
+.arch-list a{color:var(--ink);text-decoration:none}
+.arch-list a:hover{color:var(--gold)}
+.arch-list span{font-family:var(--f-mono);font-size:.68rem;color:var(--dim);white-space:nowrap;padding-top:.2rem}
+
+/* ---------- comms ---------- */
+.net{display:grid;grid-template-columns:1fr 1.15fr;gap:1.2rem;align-items:start}
+.net>*{min-width:0}
+.contact{padding:2.1rem;display:grid;gap:1.4rem}
+.contact h3{margin:0;font-family:var(--f-display);font-weight:400;font-size:clamp(1.4rem,3vw,2rem);line-height:1.2;letter-spacing:.02em;text-wrap:balance}
+.contact h3 span{color:var(--gold)}
+.contact p{margin:0;color:var(--dim);max-width:52ch;font-weight:300}
+.links{display:grid;gap:.6rem}
+.link{display:grid;grid-template-columns:6.5rem 1fr auto;align-items:center;gap:.8rem;padding:.8rem 1rem;border:1px solid var(--line);border-radius:2px;color:var(--ink);text-decoration:none;background:rgba(4,6,12,.35);transition:border-color .25s, background .25s}
+.link:hover{border-color:var(--line-strong);background:rgba(124,196,255,.06)}
+.link .k{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.link .v{overflow-wrap:anywhere;font-family:var(--f-mono);font-size:.86rem}
+.link button{font-family:var(--f-mono);font-size:.68rem;background:none;border:1px solid var(--gold);border-radius:2px;color:var(--gold);padding:.25rem .55rem;cursor:pointer}
+.term{display:grid;grid-template-rows:auto 1fr auto;height:440px;font-family:var(--f-mono);font-size:.8rem}
+.term .bar{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.75rem 1.05rem;border-bottom:1px solid var(--line);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.term .dot{display:inline-flex;align-items:center;gap:.45rem}
+.term .dot::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--dim)}
+.term .dot.ok{color:var(--ion)}.term .dot.ok::before{background:var(--ion);box-shadow:0 0 8px var(--ion)}
+.term .dot.bad{color:var(--gold)}.term .dot.bad::before{background:var(--gold)}
+.term .log{overflow-y:auto;padding:1rem 1.05rem;display:flex;flex-direction:column;gap:.3rem;min-height:0}
+.term .log div{white-space:pre-wrap;overflow-wrap:anywhere}
+.term .sys{color:var(--dim)}.term .me{color:var(--ink)}.term .srv{color:var(--ion)}.term .err{color:var(--gold)}.term .hl{color:#c9d3e6}
+.term form{display:flex;gap:.6rem;align-items:center;padding:.75rem 1.05rem;border-top:1px solid var(--line)}
+.term label{color:var(--gold);white-space:nowrap}
+.term input{flex:1;min-width:0;background:transparent;border:0;color:var(--ink);font:inherit;caret-color:var(--gold)}
+.term input:focus{outline:none}
+.term form:focus-within{background:rgba(242,196,109,.035)}
+.quote{margin:3.8rem 0 0;font-family:var(--f-body);font-weight:300;font-size:clamp(1.25rem,2.6vw,1.75rem);max-width:44rem;text-shadow:0 2px 16px rgba(4,6,12,.95)}
+.quote cite{display:block;margin-top:.6rem;font-family:var(--f-mono);font-size:.72rem;font-style:normal;color:var(--dim);letter-spacing:.16em;text-transform:uppercase}
+
+footer{position:relative;z-index:5;padding-left:var(--gutter-l);padding-right:var(--gutter-r);padding-block:2rem calc(2rem + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:rgba(4,6,12,.86)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.8rem;font-family:var(--f-mono);font-size:.7rem;color:var(--dim);letter-spacing:.06em}
+footer b{color:var(--gold);font-weight:400}
+
+/* ---------- responsive ---------- */
+@media (max-width:1080px){
+  .mods{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .feat{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hud .meta{display:none}
+}
+@media (max-width:820px){
+  .profile-grid,.net{grid-template-columns:1fr}
+  .edu{grid-template-columns:1fr}
+  .op{grid-template-columns:1fr;gap:1rem}
+  .rail{display:none}
+  .hud nav a:not(.keep){display:none}
+  .readout{grid-template-columns:repeat(2,minmax(0,max-content))}
+}
+@media (max-width:560px){
+  .mods,.feat{grid-template-columns:1fr}
+  .bio,.contact,.idcard,.edu,.archive{padding:1.35rem}
+  .op{padding:1.3rem}
+  .link{grid-template-columns:1fr auto}
+  .link .k{grid-column:1 / -1}
+  .term{height:400px}
+  .hud nav a{padding:.45rem .45rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<div id="boot" role="status" aria-live="polite">
+  <pre id="bootLog"></pre>
+  <div class="bar"><i id="bootBar"></i></div>
+  <div class="pct"><span>SPOOLING HYPERDRIVE</span><span id="bootPct">0%</span></div>
+  <button type="button" id="bootSkip">Skip intro</button>
+</div>
+
+<canvas id="space" aria-hidden="true"></canvas>
+<div class="bg-fallback" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<header class="hud">
+  <div class="hud-in">
+    <a class="logo" href="#top" aria-label="Annie Ibrahim, back to top"><i></i>ANNIE · IBRAHIM</a>
+    <nav aria-label="Sections">
+      <a href="#profile" data-sec="profile">Crew</a>
+      <a href="#systems" data-sec="systems">Systems</a>
+      <a href="#missions" data-sec="missions">Missions</a>
+      <a href="#fleet" class="keep" data-sec="fleet">Fleet</a>
+      <a href="#comms" class="keep" data-sec="comms">Comms</a>
+    </nav>
+    <div class="meta">SHIP TIME <b id="clock">--:--:--</b> PHT<br>LAUNCH · ILIGAN 8.228°N 124.245°E</div>
+  </div>
+</header>
+
+<aside class="rail" aria-hidden="true">
+  <span class="num" id="railNum">00</span>
+  <div class="track"><i id="railFill"></i><b id="railDot"></b></div>
+  <span class="ly"><span id="ly">00000</span> LY</span>
+</aside>
+
+<main id="top">
+
+  <!-- ===== HERO ===== -->
+  <section class="band hero" data-sec="top" aria-labelledby="name">
+    <div class="wrap">
+      <div class="kicker h-in"><span>Software Engineer</span><span>UI/UX Designer</span><span>Iligan City, PH</span></div>
+      <h1 id="name" class="h-in">Annie-Neshreen<span class="l2">Ibrahim</span></h1>
+      <p class="lede h-in">Driven by a passion for programming, I explore new technologies and craft websites that deliver real value to users.</p>
+      <p class="roles h-in" aria-live="off">› course plotted for <b id="role">full-stack platforms</b></p>
+      <div class="cta h-in">
+        <a class="btn mag" href="#fleet">View projects <span aria-hidden="true">→</span></a>
+        <a class="btn ghost mag" href="#comms">Open comms</a>
+      </div>
+      <div class="readout h-in" aria-label="Quick stats">
+        <div><b data-count="40">40</b><span>Projects launched</span></div>
+        <div><b data-count="3">3</b><span>Engineering roles</span></div>
+        <div><b data-count="3">3</b><span>Freelance clients</span></div>
+        <div><b data-count="7">7</b><span>Languages</span></div>
+      </div>
+      <div class="scroll-cue h-in"><i></i>SCROLL TO ENGAGE ENGINES</div>
+    </div>
+  </section>
+
+  <!-- ===== CREW PROFILE ===== -->
+  <section class="band" id="profile" data-sec="profile" aria-labelledby="h-profile">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">01 · Crew profile</span>
+        <h2 id="h-profile">Full-stack engineer with a <em>designer's eye</em>.</h2>
+      </div>
+      <div class="profile-grid">
+        <div class="panel bio reveal">
+          <p>I'm Annie-Neshreen Ibrahim, a software engineer, UI/UX designer and graphic designer from Iligan City in Northern Mindanao, Philippines.</p>
+          <p>I build across the whole stack: AI-powered products, multi-channel commerce systems, government management platforms, and mobile apps in React Native and Flutter. I've shipped backends in Ruby on Rails, TypeScript and Laravel, and deployed on GCP, AWS and Vercel.</p>
+          <p>I work directly with clients in the US and other Western countries. I've also supervised and mentored junior developers and OJT trainees, and built prototypes that went on to win company investment.</p>
+        </div>
+        <aside class="panel idcard reveal" aria-label="Crew record">
+          <h3 class="label">Crew record</h3>
+          <dl>
+            <dt>Call sign</dt><dd class="mono">hannie404</dd>
+            <dt>Role</dt><dd>Software Engineer · UI/UX · Graphic Design</dd>
+            <dt>Home port</dt><dd>Iligan City, Northern Mindanao</dd>
+            <dt>Clearance</dt><dd>CSC Professional Eligibility</dd>
+          </dl>
+          <div class="chips">
+            <span class="chip key">Full-Stack Development</span><span class="chip">UI/UX &amp; Graphic Design</span><span class="chip">Problem Solving</span><span class="chip">Team Collaboration</span><span class="chip">Server Administration</span><span class="chip">Entrepreneurship</span><span class="chip">Time Management</span><span class="chip">Innovation-Driven Dev</span>
+          </div>
+        </aside>
+        <div class="panel edu reveal">
+          <h3 class="label">Training</h3>
+          <div><b>BS Information Technology</b><span>Mindanao State University – Iligan Institute of Technology</span></div>
+          <div><b>Senior High School</b><span>Mindanao State University – Marawi</span></div>
+          <div><b>Elementary – High School</b><span>Ibn Siena Integrated School Foundation</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SYSTEMS ===== -->
+  <section class="band" id="systems" data-sec="systems" aria-labelledby="h-sys">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">02 · Ship systems</span>
+        <h2 id="h-sys">Skills &amp; <em>technologies</em>.</h2>
+        <p>The tools I reach for every day are on top. Below them, everything I've shipped production work with.</p>
+      </div>
+      <div class="loadout reveal" aria-label="Primary systems">
+        <span class="chip key">TypeScript</span><span class="chip key">Next.js</span><span class="chip key">React</span><span class="chip key">PostgreSQL</span><span class="chip key">Supabase</span><span class="chip key">Tailwind CSS</span><span class="chip key">Prisma</span><span class="chip key">Flutter</span>
+      </div>
+      <div class="mods">
+        <article class="panel mod reveal"><header><h3>Languages</h3><span>07</span></header><div class="chips"><span class="chip">JavaScript</span><span class="chip">TypeScript</span><span class="chip">PHP</span><span class="chip">Python</span><span class="chip">C/C++</span><span class="chip">Dart</span><span class="chip">Java</span></div></article>
+        <article class="panel mod reveal"><header><h3>Frontend</h3><span>07</span></header><div class="chips"><span class="chip">React.js</span><span class="chip">Next.js</span><span class="chip">Vue</span><span class="chip">Angular</span><span class="chip">Svelte</span><span class="chip">React Native</span><span class="chip">Flutter</span></div></article>
+        <article class="panel mod reveal"><header><h3>Backend</h3><span>05</span></header><div class="chips"><span class="chip">Node.js</span><span class="chip">Express.js</span><span class="chip">Laravel</span><span class="chip">Java Spring</span><span class="chip">Ruby on Rails</span></div></article>
+        <article class="panel mod reveal"><header><h3>Databases</h3><span>05</span></header><div class="chips"><span class="chip">MySQL</span><span class="chip">PostgreSQL</span><span class="chip">MongoDB</span><span class="chip">Firebase</span><span class="chip">Supabase</span></div></article>
+        <article class="panel mod reveal"><header><h3>Cloud &amp; Tools</h3><span>07</span></header><div class="chips"><span class="chip">AWS</span><span class="chip">Docker</span><span class="chip">Git</span><span class="chip">GitLab</span><span class="chip">Visual Studio</span><span class="chip">Vercel</span><span class="chip">Linux</span></div></article>
+        <article class="panel mod reveal"><header><h3>Design &amp; CMS</h3><span>05</span></header><div class="chips"><span class="chip">Figma</span><span class="chip">Webflow</span><span class="chip">Framer</span><span class="chip">Craft CMS</span><span class="chip">WordPress</span></div></article>
+        <article class="panel mod reveal"><header><h3>UI &amp; Styling</h3><span>05</span></header><div class="chips"><span class="chip">HTML5</span><span class="chip">CSS</span><span class="chip">Tailwind CSS</span><span class="chip">Bootstrap 5</span><span class="chip">Responsive Design</span></div></article>
+        <article class="panel mod reveal"><header><h3>Emerging Tech</h3><span>04</span></header><div class="chips"><span class="chip">Blockchain</span><span class="chip">Smart Contracts</span><span class="chip">Gemini API</span><span class="chip">Three.js</span></div></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MISSION LOG ===== -->
+  <section class="band" id="missions" data-sec="missions" aria-labelledby="h-ops">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">03 · Mission log</span>
+        <h2 id="h-ops">Where I've <em>served</em>.</h2>
+        <p>Three engineering roles and three freelance contracts, from AI products to government systems.</p>
+      </div>
+      <div class="ops">
+        <article class="panel op reveal">
+          <div class="who"><b>Proudcloud Inc.</b><span>Software Developer</span><em>Full-time</em></div>
+          <ul>
+            <li>Programmed and shipped multiple AI-powered projects with machine-learning integration.</li>
+            <li>Built backends in Ruby on Rails and TypeScript for high-availability web and mobile apps.</li>
+            <li>Deployed and scaled on Firebase (GCP) and Amplify (AWS).</li>
+            <li>Worked with US-based clients and design teams on pixel-perfect web and mobile UIs.</li>
+          </ul>
+        </article>
+        <article class="panel op reveal">
+          <div class="who"><b>WT Migremo Systems Inc.</b><span>Software Engineer · Supervisor</span><em>Full-time</em></div>
+          <ul>
+            <li>Built a shipping website on the FedEx, UPS and Purolator APIs to streamline a client's logistics.</li>
+            <li>Developed mobile apps in React Native and Flutter.</li>
+            <li>Supervised and mentored junior developers and OJT trainees.</li>
+            <li>Built prototypes on my own and pitched them to stakeholders, securing company investment.</li>
+          </ul>
+        </article>
+        <article class="panel op reveal">
+          <div class="who"><b>SparkSoft Solutions, Inc.</b><span>Software Engineer</span><em>Full-time</em></div>
+          <ul>
+            <li>Integrated data streams from multiple external APIs while keeping availability high.</li>
+            <li>Built and deployed an admin dashboard for a government management system.</li>
+            <li>Led design and development of online course modules for an education platform.</li>
+          </ul>
+        </article>
+        <article class="panel op reveal">
+          <div class="who"><b>OrbitalX · Camber Morris · Agromart</b><span>Web / Frontend Developer</span><em>Freelance</em></div>
+          <ul>
+            <li>OrbitalX: rebuilt and improved the company website to brand spec (AWS, Docker, React, Laravel, Python).</li>
+            <li>Camber Morris – Quantitative Talent: data-visualization web apps, built with the client's data science team.</li>
+            <li>Agromart: responsive frontend for an agricultural e-commerce platform.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FLEET ===== -->
+  <section class="band" id="fleet" data-sec="fleet" aria-labelledby="h-proj">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">04 · The fleet</span>
+        <h2 id="h-proj">Featured <em>projects</em>.</h2>
+        <p>Six I'd show first. The full archive of 40 is below.</p>
+      </div>
+      <div class="feat" id="feat"></div>
+      <div class="panel archive reveal">
+        <header><h3 class="label">Archive · <span id="archCount">34</span> more</h3><a href="https://github.com/hannie404" target="_blank" rel="noopener">github.com/hannie404 ↗</a></header>
+        <ul class="arch-list" id="arch"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMMS ===== -->
+  <section class="band" id="comms" data-sec="comms" aria-labelledby="h-net">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">05 · Comms</span>
+        <h2 id="h-net">Let's build <em>together</em>.</h2>
+        <p>You've reached the center of the galaxy, about 26,000 light-years from home.</p>
+      </div>
+      <div class="net">
+        <div class="panel contact reveal">
+          <h3>Have a project <span>in mind?</span></h3>
+          <p>I'm always open to new projects, creative ideas, and chances to be part of your vision.</p>
+          <div class="links">
+            <div class="link"><span class="k">Email</span><a class="v" href="mailto:annie.business04@gmail.com" id="mail">annie.business04@gmail.com</a><button type="button" id="copyMail">Copy</button></div>
+            <a class="link" href="https://github.com/hannie404" target="_blank" rel="noopener"><span class="k">GitHub</span><span class="v">hannie404</span><span aria-hidden="true">↗</span></a>
+            <a class="link" href="https://www.linkedin.com/in/annie-neshreen-dev/" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span class="v">annie-neshreen-dev</span><span aria-hidden="true">↗</span></a>
+            <a class="link" href="https://dev-annie.vercel.app" target="_blank" rel="noopener"><span class="k">Web</span><span class="v">dev-annie.vercel.app</span><span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+        <div class="panel term reveal" aria-label="Comms terminal">
+          <div class="bar"><span>comms@bsl-server</span><span class="dot" id="wsDot">Connecting</span></div>
+          <div class="log" id="log" role="log" aria-live="polite"></div>
+          <form id="termForm" autocomplete="off">
+            <label for="cmd">annie@bridge:~$</label>
+            <input id="cmd" name="cmd" type="text" spellcheck="false" placeholder="type help">
+          </form>
+        </div>
+      </div>
+      <blockquote class="quote reveal">“The only way to do great work is to love what you do.”<cite>— Steve Jobs</cite></blockquote>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 <b>Annie-Neshreen Ibrahim</b> · MIT License</span>
+    <span>Served by Bonezegei Scripting Language v1.3.3 · CCC181 Lab 1</span>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+
+<!-- ===================== PAGE LOGIC (non-3D) ===================== -->
+<script>
+(() => {
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.__RM = RM;
+
+  /* ---------- project data ---------- */
+  const FEATURED = [
+    {n:'Copyt Concierge', k:'Resale ops', d:'A managed "sell-it-for-me" resale service. Items are authenticated, photographed and listed on StockX, eBay and Whatnot at once, then delisted everywhere within seconds of a sale.', t:['Next.js','TypeScript','Supabase','Stripe','PostgreSQL'], u:'https://copyt-concierge.vercel.app/'},
+    {n:'LeadSpeak', k:'AI outreach', d:'Turns a CSV of scraped violation-record leads into personalized cold emails for a violation consultancy, with a human review step before anything is sent.', t:['Next.js','TypeScript','Brevo','Neon','Zod'], u:'https://leadspeak-chi.vercel.app/'},
+    {n:'Bukas', k:'Civic tech', d:'Business permit and licensing management for 3rd–6th class Philippine LGUs that lack the IT capacity to run the national e-BPLS systems.', t:['Next.js','TypeScript','Prisma','Tailwind','Vercel'], u:'https://bukas-one.vercel.app/'},
+    {n:'BuoySense', k:'IoT · 3D', d:'Real-time IoT flood monitoring dashboard with an interactive 3D buoy, live sensor tracking and analytics, built on Next.js 16.', t:['Next.js','TypeScript','Gemini API','shadcn/ui'], u:'https://buoy-dashboard.vercel.app/'},
+    {n:'CREDiT', k:'Blockchain', d:'Users create and verify credentials and certificates. Each credential is an NFT with a unique token ID that employers can check.', t:['Next.js','TypeScript','ICP','Blockchain'], u:'https://credit.zaide.online/'},
+    {n:'Fix2Finish', k:'AI matching', d:'An AI-powered PWA that matches homeowners with the right contractors for home improvement projects.', t:['Next.js PWA','TypeScript','Firebase','Gemini API'], u:'https://fix2finish.com/'}
+  ];
+  const ARCHIVE = [
+    ['Padron','Compliance','https://padron-one.vercel.app/'],['Registrada','SEC filings','https://registrada.vercel.app/'],
+    ['BuildTrack-LGU System','Gov','https://gov-track-system.vercel.app/'],['AI Code Assistant','AI','https://linux-ai-axis.vercel.app/'],
+    ['Anonymous VoiceMail','3D UI','https://anony-voice.vercel.app/'],['Helpdesk System','SaaS','https://platform-web-demos.vercel.app/login/helpdesk'],
+    ['Booking System','SaaS','https://platform-web-demos.vercel.app/login/booking'],['Inventory System','SaaS','https://platform-web-demos.vercel.app/login/inventory'],
+    ['Sales System','SaaS','https://platform-web-demos.vercel.app/login/sales'],['Textile System','SaaS','https://platform-web-demos.vercel.app/login/textile'],
+    ['Events System','SaaS','https://platform-web-demos.vercel.app/login/event'],['WTMSI System','Corporate','https://wtmsi.vercel.app/'],
+    ['Saikotech Solutions','Corporate','https://saikotechsolutions.com/'],['Watatrip Admin Dashboard','Dashboard','https://watatrip-web-admin-dashboard.vercel.app/dashboard'],
+    ['Watatrip Mobile App','Flutter',''],['Dashboard Template UI','Three.js','https://soft-creative-ui-dashboard.netlify.app/'],
+    ['OrbitalX','Webflow','https://www.orbitalx.com/'],['Camber Morris','Webflow','https://www.cambermorris.com/'],
+    ['Ship in a Flash','Headless CMS',''],['Strynx','Framer → code','https://strynx.vercel.app/'],
+    ['Premium Agency','React','https://startup-delta-weld.vercel.app/'],['ICT Events','Next.js','https://iligan-ictmonth2025.vercel.app/'],
+    ['TerraMartz','E-commerce','https://terramartz.vercel.app/'],['Minimalist Kanban Board','React','https://chat-daddy-kanban.vercel.app/'],
+    ['Daedalus','Svelte','https://daedalus.codes/'],['Elegant Tiny Homes','WordPress','https://www.eleganttinyhomes.com/'],
+    ['Buddy Moving','WordPress','http://buddy-moving.free.nf/'],['US Survival Store','E-commerce','https://ussurvivalsolutionsllc.com/'],
+    ['Notus React Dashboard','React',''],['Mathayog','EdTech','http://www.mathayog.com/'],
+    ['Blockchain','Explainer','https://hannie404.github.io/blockchain/'],['EliteSite','BPO','https://hannie404.github.io/EliteSite/'],
+    ['Task & Thoughts','React','https://hannie404.github.io/Task-Thoughts/'],['Weather App','API','https://aweatherforecast.onrender.com/']
+  ];
+  window.__PORTFOLIO = {FEATURED, ARCHIVE};
+
+  const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  document.getElementById('feat').innerHTML = FEATURED.map((p,i)=>`
+    <a class="panel card reveal" href="${p.u}" target="_blank" rel="noopener">
+      <span class="glow"></span>
+      <div class="top"><span>${esc(p.k)}</span><b>${String(i+1).padStart(2,'0')}</b></div>
+      <h3>${esc(p.n)}</h3>
+      <p>${esc(p.d)}</p>
+      <div class="chips">${p.t.map(t=>`<span class="chip">${esc(t)}</span>`).join('')}</div>
+      <div class="go"><span>${p.u.replace(/^https?:\/\//,'').replace(/\/$/,'')}</span><span aria-hidden="true">→</span></div>
+    </a>`).join('');
+  document.getElementById('arch').innerHTML = ARCHIVE.map(([n,k,u])=>`<li>${u?`<a href="${u}" target="_blank" rel="noopener">${esc(n)}</a>`:esc(n)}<span>${esc(k)}</span></li>`).join('');
+  document.getElementById('archCount').textContent = ARCHIVE.length;
+
+  /* ---------- boot sequence ---------- */
+  const boot = document.getElementById('boot'), bootLog = document.getElementById('bootLog');
+  const bar = document.getElementById('bootBar'), pct = document.getElementById('bootPct');
+  const lines = ['BONEZEGEI v1.3.3 · http(8000) <b>ONLINE</b>','loading public/index.html <b>OK</b>','charting Milky Way · Orion Arm','plotting course to Sagittarius A*','pilot: ANNIE-NESHREEN IBRAHIM','<b>READY FOR JUMP</b>'];
+  let bootDone = false, bootP = 0;
+  const finishBoot = () => { if (bootDone) return; bootDone = true; bar.style.width='100%'; pct.textContent='100%'; boot.classList.add('done'); window.__booted = true; window.dispatchEvent(new Event('booted')); };
+  window.__bootProgress = v => { bootP = Math.max(bootP, v); };
+  document.getElementById('bootSkip').onclick = finishBoot;
+  setTimeout(finishBoot, 5000); // never trap a visitor behind the intro
+  if (RM) finishBoot();
+  else {
+    let i = 0; const t0 = performance.now();
+    const tick = () => {
+      if (bootDone) return;
+      const el = performance.now() - t0;
+      const target = Math.min(1, (el/1800) * (0.4 + 0.6*bootP));
+      const n = Math.floor(target*lines.length);
+      while (i < n) bootLog.innerHTML += '› ' + lines[i++] + '\n';
+      bar.style.width = (target*100).toFixed(0)+'%'; pct.textContent = (target*100).toFixed(0)+'%';
+      if (target >= 1) setTimeout(finishBoot, 300); else requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  /* ---------- clock ---------- */
+  const clock = document.getElementById('clock');
+  const fmt = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Manila',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+  const tickClock = () => clock.textContent = fmt.format(new Date());
+  tickClock(); setInterval(tickClock, 1000);
+
+  /* ---------- role ticker ---------- */
+  const roles = ['full-stack platforms','AI-powered products','multi-channel commerce','civic tech for LGUs','mobile apps in Flutter','pixel-perfect UIs'];
+  const roleEl = document.getElementById('role');
+  if (!RM) {
+    let r = 0;
+    setInterval(() => {
+      r = (r+1) % roles.length;
+      if (window.gsap) gsap.timeline().to(roleEl,{opacity:0,y:-6,duration:.25}).add(()=>{ roleEl.textContent = roles[r]; }).fromTo(roleEl,{opacity:0,y:6},{opacity:1,y:0,duration:.3});
+      else roleEl.textContent = roles[r];
+    }, 2800);
+  }
+
+  /* ---------- copy email ---------- */
+  document.getElementById('copyMail').addEventListener('click', e => {
+    const b = e.currentTarget, txt = 'annie.business04@gmail.com';
+    const ok = () => { b.textContent = 'Copied'; setTimeout(()=>b.textContent='Copy',1600); };
+    const selectMail = () => { const r=document.createRange(); r.selectNodeContents(document.getElementById('mail')); const s=getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent='Selected'; };
+    if (navigator.clipboard?.writeText) navigator.clipboard.writeText(txt).then(ok, selectMail); else selectMail();
+  });
+
+  /* ---------- card tilt + magnetic buttons ---------- */
+  const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
+  if (fine && !RM) {
+    document.querySelectorAll('.card').forEach(c => {
+      c.addEventListener('pointermove', e => {
+        const r = c.getBoundingClientRect(), x = (e.clientX-r.left)/r.width, y = (e.clientY-r.top)/r.height;
+        c.style.setProperty('--ry', ((x-.5)*8).toFixed(2)+'deg'); c.style.setProperty('--rx', ((.5-y)*8).toFixed(2)+'deg');
+        c.style.setProperty('--mx', (x*100)+'%'); c.style.setProperty('--my', (y*100)+'%');
+      });
+      c.addEventListener('pointerleave', () => { c.style.setProperty('--rx','0deg'); c.style.setProperty('--ry','0deg'); });
+    });
+    document.querySelectorAll('.mag').forEach(b => {
+      b.addEventListener('pointermove', e => { const r=b.getBoundingClientRect(); b.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.15}px,${(e.clientY-r.top-r.height/2)*.25}px)`; });
+      b.addEventListener('pointerleave', () => b.style.transform='');
+    });
+  }
+
+  /* ---------- section tracking (nav + rail) ---------- */
+  const secs = [...document.querySelectorAll('main section')];
+  const navLinks = [...document.querySelectorAll('.hud nav a')];
+  const railNum = document.getElementById('railNum'), railFill = document.getElementById('railFill'), railDot = document.getElementById('railDot'), lyEl = document.getElementById('ly');
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    railNum.textContent = String(secs.indexOf(e.target)).padStart(2,'0');
+    navLinks.forEach(a => a.classList.toggle('on', a.dataset.sec === e.target.dataset.sec));
+  }), {rootMargin:'-45% 0px -50% 0px'});
+  secs.forEach(s => io.observe(s));
+  const onScroll = () => {
+    const max = document.documentElement.scrollHeight - innerHeight, f = max>0 ? scrollY/max : 0;
+    railFill.style.height = (f*100) + '%'; railDot.style.top = (f*100) + '%';
+    lyEl.textContent = String(Math.round(f*26000)).padStart(5,'0'); // Earth → galactic center ≈ 26,000 light-years
+  };
+  addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  /* ---------- GSAP reveals ---------- */
+  const startReveals = () => {
+    if (RM || !window.gsap) return;
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.from('.h-in', {y:24, opacity:0, duration:1, ease:'power3.out', stagger:.08, delay:.5});
+    document.querySelectorAll('[data-count]').forEach(el => {
+      const end = +el.dataset.count, o = {v:0};
+      gsap.to(o, {v:end, duration:1.8, ease:'power2.out', delay:.8, onUpdate:()=> el.textContent = Math.round(o.v)});
+    });
+    gsap.utils.toArray('.reveal').forEach(el => {
+      if (el.getBoundingClientRect().top < innerHeight) return;
+      gsap.from(el, {y:40, opacity:0, duration:.9, ease:'power3.out', scrollTrigger:{trigger:el, start:'top 88%', once:true}});
+    });
+  };
+  addEventListener('booted', startReveals, {once:true});
+  if (window.__booted) startReveals();
+
+  /* ---------- Comms terminal + WebSocket ---------- */
+  const log = document.getElementById('log'), dot = document.getElementById('wsDot'), form = document.getElementById('termForm'), input = document.getElementById('cmd');
+  const out = (text, cls='sys') => { const d=document.createElement('div'); d.className=cls; d.textContent=text; log.appendChild(d); log.scrollTop=log.scrollHeight; };
+  const setDot = (txt, cls) => { dot.textContent = txt; dot.className = 'dot ' + (cls||''); };
+  out('Comms v1.0 · Bonezegei WebSocket relay');
+  out('Type "help" to list commands. Anything else is broadcast to every ship on this channel.', 'hl');
+
+  let ws = null, tries = 0;
+  const connect = () => {
+    if (!/^https?:$/.test(location.protocol) || !location.host) { setDot('Offline', 'bad'); out('No BSL server here. Run `bzg run` and open http://localhost:8000 to go live.', 'err'); return; }
+    const url = (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host;
+    try { ws = new WebSocket(url); } catch (e) { setDot('Offline','bad'); out('WebSocket is blocked in this viewer. Local commands still work.', 'err'); return; }
+    setDot('Connecting');
+    ws.onopen = () => { tries = 0; setDot('Live · ' + location.host, 'ok'); out('[sys] channel open. You are on the comms relay.', 'srv'); };
+    ws.onmessage = e => out('[relay] ' + e.data, 'srv');
+    ws.onclose = () => { setDot('Offline','bad'); if (tries++ < 2) setTimeout(connect, 2000); else out('[sys] signal lost. Local commands still work.', 'err'); };
+  };
+  connect();
+
+  const P = window.__PORTFOLIO;
+  const CMDS = {
+    help: () => ['whoami     · who is flying this ship','skills     · primary systems','projects   · featured fleet','contact    · how to reach me','ping       · round-trip to the BSL server','clear      · wipe the screen','goto <id>  · jump to profile | systems | missions | fleet | comms'].forEach(l=>out(l,'hl')),
+    whoami: () => out('Annie-Neshreen Ibrahim · Software Engineer, UI/UX Designer · Iligan City, PH'),
+    skills: () => out('TypeScript · Next.js · React · PostgreSQL · Supabase · Tailwind · Prisma · Flutter · Laravel · AWS · Docker'),
+    projects: () => P.FEATURED.forEach((p,i)=>out(`${String(i+1).padStart(2,'0')}  ${p.n.padEnd(16)} ${p.u}`)),
+    contact: () => { out('email    annie.business04@gmail.com'); out('github   github.com/hannie404'); out('linkedin linkedin.com/in/annie-neshreen-dev'); },
+    clear: () => { log.innerHTML=''; },
+    ping: () => { if (ws && ws.readyState === 1) { const t=performance.now(); const h = () => { out(`[sys] pong in ${(performance.now()-t).toFixed(1)} ms`, 'hl'); ws.removeEventListener('message', h); }; ws.addEventListener('message', h); ws.send('ping'); } else out('[sys] not connected to the BSL server.', 'err'); },
+    goto: a => { const el = document.getElementById(a); if (el) el.scrollIntoView({behavior: RM?'auto':'smooth'}); else out('unknown sector: ' + a, 'err'); }
+  };
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const raw = input.value.trim(); if (!raw) return; input.value='';
+    out('annie@bridge:~$ ' + raw, 'me');
+    const [c, ...args] = raw.split(/\s+/); const fn = CMDS[c.toLowerCase()];
+    if (fn) fn(args.join(' '));
+    else if (ws && ws.readyState === 1) ws.send(raw);
+    else out(`command not found: ${c} (connect to the BSL server to broadcast messages)`, 'err');
+  });
+})();
+</script>
+
+<!-- ===================== 3D: VOYAGE ACROSS THE MILKY WAY ===================== -->
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+const RM = window.__RM;
+const canvas = document.getElementById('space');
+const MOBILE = matchMedia('(max-width: 820px), (pointer: coarse)').matches;
+THREE.ColorManagement.enabled = false;
+
+let renderer;
+try { renderer = new THREE.WebGLRenderer({canvas, antialias: true, powerPreference: 'high-performance'}); }
+catch (e) { document.documentElement.classList.add('no-webgl'); window.__bootProgress?.(1); throw e; }
+renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+renderer.setPixelRatio(Math.min(devicePixelRatio, MOBILE ? 1.5 : 1.75));
+renderer.setSize(innerWidth, innerHeight, false);
+renderer.setClearColor(0x04060c, 1);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(55, innerWidth/innerHeight, 0.1, 4000);
+const SUN_DIR = new THREE.Vector3(0.75, 0.32, 0.45).normalize();
+const uni = { uTime:{value:0}, uLight:{value:SUN_DIR} };
+
+/* shared GLSL value noise */
+const NOISE = `
+float h3(vec3 p){ p = fract(p*0.3183099 + 0.1); p *= 17.0; return fract(p.x*p.y*p.z*(p.x+p.y+p.z)); }
+float vnoise(vec3 x){ vec3 i = floor(x), f = fract(x); f = f*f*(3.0-2.0*f);
+  return mix(mix(mix(h3(i),h3(i+vec3(1,0,0)),f.x), mix(h3(i+vec3(0,1,0)),h3(i+vec3(1,1,0)),f.x),f.y),
+             mix(mix(h3(i+vec3(0,0,1)),h3(i+vec3(1,0,1)),f.x), mix(h3(i+vec3(0,1,1)),h3(i+vec3(1,1,1)),f.x),f.y), f.z); }
+float fbm(vec3 p){ float a = 0.5, s = 0.0; for (int i = 0; i < 5; i++){ s += a*vnoise(p); p = p*2.03 + 7.1; a *= 0.5; } return s; }`;
+
+/* glow sprites */
+const glowTex = (inner, outer) => {
+  const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d');
+  const gr = g.createRadialGradient(64,64,0,64,64,64); gr.addColorStop(0, inner); gr.addColorStop(.25, outer); gr.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = gr; g.fillRect(0,0,128,128); return new THREE.CanvasTexture(c);
+};
+const sprite = (tex, scale, opacity=1) => { const s = new THREE.Sprite(new THREE.SpriteMaterial({map: tex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity})); s.scale.setScalar(scale); return s; };
+
+/* ---------- sky: Milky Way band, dust lanes, nebulae, stars (rides with the camera) ---------- */
+const skyGroup = new THREE.Group(); scene.add(skyGroup);
+{
+  const m = new THREE.ShaderMaterial({
+    side: THREE.BackSide, depthWrite: false, uniforms: uni,
+    vertexShader: `varying vec3 vD; void main(){ vD = position; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+    fragmentShader: `varying vec3 vD; ${NOISE}
+      void main(){
+        vec3 d = normalize(vD);
+        vec3 n = normalize(vec3(0.28, 1.0, 0.18));
+        float lat = dot(d, n);
+        float band = exp(-lat*lat*16.0);
+        vec3 coreDir = normalize(vec3(0.0, 0.08, -1.0));
+        float core = pow(max(dot(d, coreDir), 0.0), 5.0);
+        float cloud = fbm(d*3.2);
+        float dust = smoothstep(0.48, 0.78, fbm(d*6.5 + 3.0)) * exp(-lat*lat*60.0);
+        vec3 col = vec3(0.006, 0.008, 0.018);
+        col += band * (0.035 + 0.16*cloud*cloud) * vec3(0.62, 0.68, 0.9);
+        col += band * core * (0.3 + 0.4*cloud) * vec3(1.0, 0.78, 0.52);
+        col *= 1.0 - dust*0.75;
+        float neb = pow(fbm(d*1.7 + 11.0), 3.0);
+        col += neb * 0.10 * mix(vec3(0.42,0.25,0.62), vec3(0.15,0.32,0.6), cloud);
+        vec3 g = d*380.0; float s = h3(floor(g)); float dist = length(fract(g) - 0.5);
+        col += step(0.988, s) * smoothstep(0.32, 0.0, dist) * (0.35 + band*1.2) * vec3(0.9, 0.93, 1.0);
+        gl_FragColor = vec4(col, 1.0);
+      }`
+  });
+  skyGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1800, 48, 24), m));
+
+  const N = MOBILE ? 2500 : 6000;
+  const pos = new Float32Array(N*3), col = new Float32Array(N*3), size = new Float32Array(N), ph = new Float32Array(N);
+  const tints = [[0.75,0.85,1.0],[1,1,1],[1,0.92,0.75],[1,0.75,0.55]];
+  const n = new THREE.Vector3(0.28,1,0.18).normalize(), v = new THREE.Vector3();
+  for (let i = 0; i < N; i++) {
+    v.randomDirection();
+    if (Math.random() < 0.45) v.addScaledVector(n, -v.dot(n) * (0.75 + Math.random()*0.25)).normalize(); // crowd stars into the band
+    v.multiplyScalar(1500); pos.set([v.x, v.y, v.z], i*3);
+    col.set(tints[Math.floor(Math.random()*tints.length)], i*3);
+    size[i] = Math.random() < 0.03 ? 3.2 : 0.8 + Math.random()*1.6; ph[i] = Math.random()*6.28;
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos,3)); g.setAttribute('aCol', new THREE.BufferAttribute(col,3));
+  g.setAttribute('aSize', new THREE.BufferAttribute(size,1)); g.setAttribute('aPh', new THREE.BufferAttribute(ph,1));
+  const sm = new THREE.ShaderMaterial({
+    uniforms: {uTime: uni.uTime, uPR:{value: renderer.getPixelRatio()}}, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    vertexShader: `uniform float uTime; uniform float uPR; attribute vec3 aCol; attribute float aSize; attribute float aPh; varying vec3 vC; varying float vT;
+      void main(){ vC = aCol; vT = 0.7 + 0.3*sin(uTime*1.6 + aPh*11.0); gl_PointSize = aSize*uPR; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+    fragmentShader: `varying vec3 vC; varying float vT; void main(){ float d = length(gl_PointCoord - 0.5); float a = smoothstep(0.5, 0.0, d); gl_FragColor = vec4(vC*vT*a, 1.0); }`
+  });
+  skyGroup.add(new THREE.Points(g, sm));
+  const sun = sprite(glowTex('rgba(255,250,235,1)','rgba(255,205,140,.35)'), 170);
+  sun.position.copy(SUN_DIR).multiplyScalar(1400); skyGroup.add(sun);
+}
+
+/* ---------- light ---------- */
+scene.add(new THREE.HemisphereLight(0x6f86b8, 0x0b0a12, 0.35));
+const sunLight = new THREE.DirectionalLight(0xfff1dc, 2.4); sunLight.position.copy(SUN_DIR).multiplyScalar(100); scene.add(sunLight);
+
+/* ---------- route through the galaxy ---------- */
+const route = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(0, 0, 0),
+  new THREE.Vector3(12, 5, -130),
+  new THREE.Vector3(-18, 12, -270),
+  new THREE.Vector3(8, -4, -410),
+  new THREE.Vector3(-12, 8, -550),
+  new THREE.Vector3(4, 14, -690),
+  new THREE.Vector3(0, 22, -800)
+], false, 'catmullrom', 0.5);
+
+/* ---------- ringed gas giant (hero) ---------- */
+let giant;
+{
+  giant = new THREE.Group(); giant.position.set(125, -30, -175); scene.add(giant);
+  const pm = new THREE.ShaderMaterial({
+    uniforms: uni,
+    vertexShader: `varying vec3 vN; varying vec3 vL; varying vec3 vV; void main(){ vL = normalize(position); vN = normalize(mat3(modelMatrix)*normal); vec4 w = modelMatrix*vec4(position,1.0); vV = normalize(cameraPosition - w.xyz); gl_Position = projectionMatrix*viewMatrix*w; }`,
+    fragmentShader: `uniform vec3 uLight; uniform float uTime; varying vec3 vN; varying vec3 vL; varying vec3 vV; ${NOISE}
+      void main(){
+        float lat = vL.y + 0.08*fbm(vL*4.0 + vec3(uTime*0.01,0.0,0.0));
+        float b = fbm(vec3(lat*9.0, lat*2.0, 0.0));
+        vec3 c = mix(vec3(0.62,0.46,0.32), vec3(0.93,0.83,0.66), b);
+        c = mix(c, vec3(0.45,0.3,0.22), smoothstep(0.55,0.75, fbm(vec3(lat*22.0, 1.0, 2.0)))*0.5);
+        float dif = max(dot(vN, uLight), 0.0);
+        float rim = pow(1.0 - max(dot(vN, vV), 0.0), 3.0);
+        vec3 col = c * (0.035 + 1.05*dif) + vec3(1.0,0.8,0.55) * rim * dif * 0.6;
+        gl_FragColor = vec4(col, 1.0); }`
+  });
+  giant.add(new THREE.Mesh(new THREE.SphereGeometry(62, 96, 64), pm));
+  const rm = new THREE.ShaderMaterial({
+    uniforms: uni, transparent: true, side: THREE.DoubleSide, depthWrite: false,
+    vertexShader: `varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+    fragmentShader: `varying vec3 vP; ${NOISE}
+      void main(){ float r = length(vP.xy); float t = (r - 80.0)/55.0;
+        float bands = 0.55 + 0.45*sin(r*0.9) * fbm(vec3(r*0.35, 0.0, 0.0));
+        float gap = smoothstep(0.02, 0.0, abs(t - 0.62));
+        float a = smoothstep(0.0, 0.05, t) * smoothstep(1.0, 0.85, t) * bands * (1.0 - gap*0.9);
+        vec3 c = mix(vec3(0.85,0.74,0.58), vec3(0.6,0.55,0.5), t);
+        gl_FragColor = vec4(c*0.9, a*0.75); }`
+  });
+  const ring = new THREE.Mesh(new THREE.RingGeometry(80, 135, 192, 1), rm); ring.rotation.set(-1.25, 0.25, 0.3); giant.add(ring);
+  giant.rotation.z = 0.25;
+}
+
+/* ---------- ocean world with atmosphere and moon (crew profile) ---------- */
+let world, moon;
+{
+  world = new THREE.Group(); world.position.set(-95, 25, -335); scene.add(world);
+  const wm = new THREE.ShaderMaterial({
+    uniforms: uni,
+    vertexShader: `varying vec3 vN; varying vec3 vL; varying vec3 vV; void main(){ vL = normalize(position); vN = normalize(mat3(modelMatrix)*normal); vec4 w = modelMatrix*vec4(position,1.0); vV = normalize(cameraPosition - w.xyz); gl_Position = projectionMatrix*viewMatrix*w; }`,
+    fragmentShader: `uniform vec3 uLight; uniform float uTime; varying vec3 vN; varying vec3 vL; varying vec3 vV; ${NOISE}
+      void main(){
+        float e = fbm(vL*2.6);
+        float land = smoothstep(0.53, 0.56, e);
+        vec3 ocean = mix(vec3(0.02,0.08,0.22), vec3(0.05,0.2,0.4), smoothstep(0.35,0.53,e));
+        vec3 ground = mix(vec3(0.16,0.3,0.14), vec3(0.5,0.42,0.28), smoothstep(0.58,0.7,e));
+        ground = mix(ground, vec3(0.95), smoothstep(0.78, 0.86, abs(vL.y)));
+        vec3 c = mix(ocean, ground, land);
+        float cl = smoothstep(0.52, 0.68, fbm(vL*4.5 + vec3(uTime*0.004, 0.0, 0.0)));
+        float dif = max(dot(vN, uLight), 0.0);
+        vec3 col = mix(c, vec3(1.0), cl*0.85) * (0.02 + 1.1*dif);
+        float spec = pow(max(dot(reflect(-uLight, vN), vV), 0.0), 40.0) * (1.0-land) * (1.0-cl);
+        col += spec * 0.5 * vec3(1.0,0.9,0.75);
+        float night = smoothstep(0.15, -0.1, dot(vN, uLight));
+        col += night * land * (1.0-cl) * step(0.82, h3(floor(vL*140.0))) * vec3(1.0,0.72,0.35) * 0.9;
+        float rim = pow(1.0 - max(dot(vN, vV), 0.0), 2.5);
+        col += rim * vec3(0.3,0.6,1.0) * (0.15 + dif*0.8);
+        gl_FragColor = vec4(col, 1.0); }`
+  });
+  world.add(new THREE.Mesh(new THREE.SphereGeometry(46, 96, 64), wm));
+  const am = new THREE.ShaderMaterial({
+    uniforms: uni, side: THREE.BackSide, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    vertexShader: `varying vec3 vN; varying vec3 vV; void main(){ vN = normalize(mat3(modelMatrix)*normal); vec4 w = modelMatrix*vec4(position,1.0); vV = normalize(cameraPosition - w.xyz); gl_Position = projectionMatrix*viewMatrix*w; }`,
+    fragmentShader: `uniform vec3 uLight; varying vec3 vN; varying vec3 vV;
+      void main(){ float i = pow(max(0.0, 0.72 + dot(vN, vV)), 4.0); float lit = 0.25 + 0.75*max(dot(-vN, uLight)*0.5+0.5, 0.0);
+        gl_FragColor = vec4(vec3(0.3,0.6,1.0)*i*lit*1.6, 1.0); }`
+  });
+  world.add(new THREE.Mesh(new THREE.SphereGeometry(52, 64, 48), am));
+  moon = new THREE.Mesh(new THREE.IcosahedronGeometry(7, 4), new THREE.MeshStandardMaterial({color:0x8d8a86, roughness:1}));
+  world.add(moon);
+}
+
+/* ---------- asteroid field (ship systems) ---------- */
+let rocks;
+{
+  const N = MOBILE ? 180 : 420;
+  const geo = new THREE.IcosahedronGeometry(1, 1);
+  const pa = geo.attributes.position, v = new THREE.Vector3();
+  for (let i = 0; i < pa.count; i++) {
+    v.fromBufferAttribute(pa, i);
+    const k = Math.sin(v.x*12.9 + v.y*78.2 + v.z*37.7) * 43758.5; const r = 0.78 + (k - Math.floor(k))*0.42;
+    pa.setXYZ(i, v.x*r, v.y*r*0.85, v.z*r);
+  }
+  geo.computeVertexNormals();
+  rocks = new THREE.InstancedMesh(geo, new THREE.MeshStandardMaterial({color:0xffffff, roughness:0.95, metalness:0.05, flatShading:true}), N);
+  const data = [], m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), p = new THREE.Vector3(), col = new THREE.Color();
+  for (let i = 0; i < N; i++) {
+    route.getPointAt(0.36 + Math.random()*0.24, p);
+    const big = Math.random() < 0.08, sc = big ? 4 + Math.random()*6 : 0.4 + Math.random()*2.2;
+    const ang = Math.random()*Math.PI*2, rad = (big ? 40 : 14) + Math.pow(Math.random(), 1.6)*90; // keep a clear lane for the ship
+    p.x += Math.cos(ang)*rad; p.y += Math.sin(ang)*rad*0.5; p.z += (Math.random()-0.5)*30;
+    const d = {p: p.clone(), s: new THREE.Vector3(sc, sc*(0.7+Math.random()*0.5), sc), r: new THREE.Euler(Math.random()*6, Math.random()*6, 0), w: (Math.random()-0.5)*0.6};
+    data.push(d); q.setFromEuler(d.r); m4.compose(d.p, q, d.s); rocks.setMatrixAt(i, m4);
+    col.setHSL(0.07, 0.12, 0.3 + Math.random()*0.25); rocks.setColorAt(i, col);
+  }
+  rocks.userData.data = data;
+  scene.add(rocks);
+}
+
+/* ---------- orbital station (mission log / fleet) ---------- */
+let station;
+{
+  station = new THREE.Group(); station.position.set(72, 14, -585); scene.add(station);
+  const metal = new THREE.MeshStandardMaterial({color:0xb9bfc9, metalness:0.6, roughness:0.4});
+  const dark = new THREE.MeshStandardMaterial({color:0x3a404c, metalness:0.5, roughness:0.6});
+  const spin = new THREE.Group(); station.add(spin);
+  spin.add(new THREE.Mesh(new THREE.TorusGeometry(28, 2.4, 18, 120), metal));
+  const lights = new THREE.MeshBasicMaterial({color: new THREE.Color(0x7cc4ff).multiplyScalar(1.6)});
+  [-1.6, 1.6].forEach(z => { const r = new THREE.Mesh(new THREE.TorusGeometry(28, 0.18, 6, 240), lights); r.position.z = z; spin.add(r); });
+  for (let i = 0; i < 6; i++) { const g = new THREE.BoxGeometry(0.9, 27, 0.9); g.translate(0, 13.5, 0); const sp = new THREE.Mesh(g, dark); sp.rotation.z = i*Math.PI/3; spin.add(sp); }
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 14, 32), metal); hub.rotation.x = Math.PI/2; spin.add(hub);
+  const dock = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 26, 16), dark); dock.rotation.x = Math.PI/2; station.add(dock);
+  const panelMat = new THREE.MeshStandardMaterial({color:0x1b2a4a, metalness:0.7, roughness:0.3, emissive:0x0a1730});
+  [-1, 1].forEach(sd => { const pnl = new THREE.Mesh(new THREE.BoxGeometry(34, 0.3, 9), panelMat); pnl.position.set(sd*30, 0, 13); station.add(pnl); });
+  const beaconTex = glowTex('rgba(255,90,80,1)','rgba(255,60,60,.4)');
+  const beacons = [];
+  [[0,0,14],[0,0,-14],[47,0,13],[-47,0,13]].forEach(pp => { const b = sprite(beaconTex, 5); b.position.set(...pp); station.add(b); beacons.push(b); });
+  station.rotation.set(0.25, -0.9, 0);
+  station.userData = {spin, beacons};
+}
+
+/* ---------- Sagittarius A*: black hole + accretion disk (comms) ---------- */
+const BH = new THREE.Vector3(0, 46, -980);
+let disk;
+{
+  const g = new THREE.Group(); g.position.copy(BH); scene.add(g);
+  const halo = sprite(glowTex('rgba(255,210,150,.9)','rgba(255,140,60,.25)'), 230, 0.28); g.add(halo);
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(16, 48, 32), new THREE.MeshBasicMaterial({color:0x000000})));
+  const dm = new THREE.ShaderMaterial({
+    uniforms: uni, transparent: true, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending,
+    vertexShader: `varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+    fragmentShader: `uniform float uTime; varying vec3 vP; ${NOISE}
+      void main(){ float r = length(vP.xy); float t = (r - 19.0)/95.0; float a = atan(vP.y, vP.x);
+        float swirl = fbm(vec3(cos(a)*3.0, sin(a)*3.0, r*0.06 - uTime*0.25) + vec3(0.0, 0.0, a*0.6 + uTime*0.15/(t+0.15)));
+        float heat = pow(1.0 - t, 2.2);
+        vec3 c = mix(vec3(0.9,0.3,0.08), vec3(1.0,0.9,0.7), heat);
+        float alpha = smoothstep(0.0, 0.04, t) * smoothstep(1.0, 0.5, t) * (0.35 + 0.9*swirl);
+        gl_FragColor = vec4(c * alpha * (0.3 + 0.9*heat), 1.0); }`
+  });
+  disk = new THREE.Mesh(new THREE.RingGeometry(19, 114, 192, 8), dm);
+  disk.rotation.x = -1.32; g.add(disk);
+  g.add(new THREE.Mesh(new THREE.TorusGeometry(17.2, 0.5, 8, 160), new THREE.MeshBasicMaterial({color: new THREE.Color(1.6, 1.25, 0.9)})));
+}
+
+/* ---------- the starship: an original interceptor built from primitives ---------- */
+const ship = new THREE.Group(); scene.add(ship);
+const flames = [], navs = [];
+{
+  const hull = new THREE.MeshStandardMaterial({color:0xd9dde4, metalness:0.55, roughness:0.35});
+  const plate = new THREE.MeshStandardMaterial({color:0x3b4352, metalness:0.6, roughness:0.45});
+  const gold = new THREE.MeshStandardMaterial({color:0xf2c46d, metalness:0.7, roughness:0.3, emissive:0x3a2a08});
+  const glass = new THREE.MeshStandardMaterial({color:0x0b1830, metalness:0.95, roughness:0.08, emissive:0x0a2a4a});
+
+  // fuselage (nose points +z)
+  const prof = [[0,-3.1],[0.5,-3.0],[0.78,-2.2],[0.86,-0.6],[0.7,0.9],[0.44,2.1],[0.14,2.95],[0,3.15]].map(([x,y]) => new THREE.Vector2(x,y));
+  const fus = new THREE.LatheGeometry(prof, 28); fus.rotateX(Math.PI/2); fus.scale(1, 0.62, 1);
+  ship.add(new THREE.Mesh(fus, hull));
+  const spine = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.12, 3.6), gold); spine.position.set(0, 0.5, -0.6); ship.add(spine);
+  const canopy = new THREE.Mesh(new THREE.SphereGeometry(0.45, 24, 16), glass); canopy.scale.set(0.95, 0.62, 2.0); canopy.position.set(0, 0.36, 1.05); ship.add(canopy);
+
+  // swept wings
+  const wingShape = new THREE.Shape([[0.55,-2.0],[3.9,-2.75],[4.15,-2.35],[3.6,-1.95],[0.65,0.75]].map(([x,y]) => new THREE.Vector2(x,y)));
+  const wingGeo = new THREE.ExtrudeGeometry(wingShape, {depth:0.1, bevelEnabled:true, bevelThickness:0.03, bevelSize:0.03, bevelSegments:1});
+  wingGeo.rotateX(Math.PI/2); wingGeo.translate(0, 0.05, 0);
+  const wingMat = hull.clone(); wingMat.side = THREE.DoubleSide;
+  const flameMat = new THREE.MeshBasicMaterial({color: new THREE.Color(0.55, 0.85, 1.6), transparent:true, opacity:0.5, blending:THREE.AdditiveBlending, depthWrite:false, side:THREE.DoubleSide});
+  const exhaustTex = glowTex('rgba(235,248,255,1)','rgba(110,190,255,.55)');
+  [1,-1].forEach(sd => {
+    const w = new THREE.Mesh(wingGeo, wingMat); w.scale.x = sd; w.rotation.z = sd*0.07; ship.add(w);
+    const stripe = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.04, 0.16), gold); stripe.position.set(sd*2.3, 0.14, -1.55); stripe.rotation.y = sd*0.24; ship.add(stripe);
+    const tipPod = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 1.6, 10), plate); tipPod.rotation.x = Math.PI/2; tipPod.position.set(sd*4.0, 0.05, -2.2); ship.add(tipPod);
+    const nav = sprite(glowTex(sd > 0 ? 'rgba(120,255,160,1)' : 'rgba(255,90,90,1)', sd > 0 ? 'rgba(60,255,120,.35)' : 'rgba(255,60,60,.35)'), 0.7);
+    nav.position.set(sd*4.0, 0.08, -1.4); ship.add(nav); navs.push(nav);
+    const nac = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.3, 2.3, 20), plate); nac.rotation.x = Math.PI/2; nac.position.set(sd*1.15, -0.08, -2.05); ship.add(nac);
+    const ringN = new THREE.Mesh(new THREE.TorusGeometry(0.33, 0.05, 8, 24), gold); ringN.position.set(sd*1.15, -0.08, -1.2); ship.add(ringN);
+    // ion flame: wide at the nozzle, tapering behind the ship
+    const fg = new THREE.ConeGeometry(0.27, 2.4, 20, 1, true); fg.translate(0, 1.2, 0);
+    const flame = new THREE.Mesh(fg, flameMat); flame.rotation.x = -Math.PI/2; flame.position.set(sd*1.15, -0.08, -3.2); ship.add(flame);
+    const glow = sprite(exhaustTex, 2.6); glow.position.set(sd*1.15, -0.08, -3.25); ship.add(glow);
+    flames.push({flame, glow});
+  });
+  const finGeo = new THREE.ExtrudeGeometry(new THREE.Shape([[0,0],[1.5,0],[2.1,1.25],[1.6,1.25]].map(([x,y]) => new THREE.Vector2(x,y))), {depth:0.08, bevelEnabled:false});
+  const fin = new THREE.Mesh(finGeo, wingMat); fin.rotation.y = Math.PI/2; fin.position.set(-0.04, 0.3, -1.1); ship.add(fin);
+  const core = sprite(exhaustTex, 1.6); core.position.set(0, 0, -3.15); ship.add(core);
+}
+
+/* ---------- speed dust: streaks stretch with velocity ---------- */
+const dustU = { uCam:{value:new THREE.Vector3()}, uVel:{value:new THREE.Vector3()} };
+{
+  const N = MOBILE ? 700 : 1600;
+  const pos = new Float32Array(N*2*3), tip = new Float32Array(N*2);
+  for (let i = 0; i < N; i++) { const x=(Math.random()-0.5)*180, y=(Math.random()-0.5)*120, z=(Math.random()-0.5)*180; for (let j=0;j<2;j++){ pos.set([x,y,z],(i*2+j)*3); tip[i*2+j]=j; } }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos,3)); g.setAttribute('aTip', new THREE.BufferAttribute(tip,1));
+  const m = new THREE.ShaderMaterial({
+    uniforms: dustU, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    vertexShader: `uniform vec3 uCam; uniform vec3 uVel; attribute float aTip; varying float vA; varying float vS;
+      void main(){ vec3 box = vec3(180.0,120.0,180.0); vec3 p = mod(position - uCam + box*0.5, box) - box*0.5 + uCam; p -= uVel*aTip;
+        float d = length(p - uCam); vA = smoothstep(90.0, 20.0, d) * smoothstep(2.0, 8.0, d); vS = clamp(length(uVel)*0.12, 0.08, 1.0);
+        gl_Position = projectionMatrix*viewMatrix*vec4(p,1.0); }`,
+    fragmentShader: `varying float vA; varying float vS; void main(){ gl_FragColor = vec4(vec3(0.75,0.85,1.0)*vA*vS*0.7, 1.0); }`
+  });
+  const dust = new THREE.LineSegments(g, m); dust.frustumCulled = false; scene.add(dust);
+}
+
+/* ---------- post: gentle bloom only on bright sources ---------- */
+let composer = null;
+if (!MOBILE) {
+  composer = new EffectComposer(renderer);
+  composer.setPixelRatio(renderer.getPixelRatio()); composer.setSize(innerWidth, innerHeight);
+  composer.addPass(new RenderPass(scene, camera));
+  composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.7, 0.5, 0.62));
+}
+
+/* ---------- input ---------- */
+let target = 0, prog = 0, mx = 0, my = 0, smx = 0, smy = 0, warp = 0;
+const readScroll = () => { const max = document.documentElement.scrollHeight - innerHeight; target = max > 0 ? Math.min(1, scrollY/max) : 0; };
+addEventListener('scroll', readScroll, {passive:true}); readScroll(); prog = target;
+addEventListener('pointermove', e => { mx = e.clientX/innerWidth - 0.5; my = e.clientY/innerHeight - 0.5; }, {passive:true});
+addEventListener('resize', () => { camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight, false); composer?.setSize(innerWidth, innerHeight); readScroll(); });
+const jump = () => { if (!RM) warp = 1; };
+if (window.__booted) jump(); else addEventListener('booted', jump, {once:true});
+
+/* ---------- loop ---------- */
+const clock = new THREE.Clock();
+const shipPos = new THREE.Vector3(), tan = new THREE.Vector3(), tan2 = new THREE.Vector3(), up = new THREE.Vector3(0,1,0), right = new THREE.Vector3();
+const camPos = new THREE.Vector3(), prevCam = new THREE.Vector3(), look = new THREE.Vector3(), vel = new THREE.Vector3(), tmp = new THREE.Vector3();
+const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), heading = new THREE.Quaternion();
+let running = true, first = true, frame = 0;
+document.addEventListener('visibilitychange', () => { running = !document.hidden; if (running) { clock.getDelta(); requestAnimationFrame(loop); } });
+const sideOffset = () => innerWidth > 820 ? 5.2 : 0;
+
+function loop() {
+  if (!running) return;
+  const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
+  uni.uTime.value = RM ? 0 : t;
+  prog += (target - prog) * (RM ? 1 : 1 - Math.exp(-dt*3.2)); // frame-rate independent easing
+  const ease = 1 - Math.exp(-dt*3); smx += (mx - smx)*ease; smy += (my - smy)*ease;
+  const p = prog;
+
+  // the ship rides slightly ahead of the camera on the route
+  const ps = Math.min(p*0.985 + 0.012, 1);
+  route.getPointAt(ps, shipPos); route.getTangentAt(ps, tan); route.getTangentAt(Math.min(ps + 0.02, 1), tan2);
+  right.crossVectors(tan, up).normalize();
+  shipPos.y += (RM ? 0 : Math.sin(t*1.1)*0.18) - smy*0.6; shipPos.addScaledVector(right, smx*1.4);
+
+  // chase camera: behind, above, shifted left so the ship sits to the right of the text
+  camPos.copy(shipPos).addScaledVector(tan, MOBILE ? -18 : -15).addScaledVector(up, 3.4).addScaledVector(right, -sideOffset());
+  camPos.addScaledVector(right, -smx*1.6).addScaledVector(up, smy*1.2);
+  look.copy(camPos).addScaledVector(tan, 40).addScaledVector(up, MOBILE ? 5 : -2.5);
+  const end = THREE.MathUtils.smoothstep(p, 0.8, 1.0);
+  if (end > 0) { look.lerp(BH, end*0.85); camPos.addScaledVector(up, end*6); }
+  camera.position.copy(camPos); camera.lookAt(look);
+
+  // hyperspace jump after boot
+  warp = Math.max(0, warp - dt*0.55);
+  const w = warp*warp*(3 - 2*warp);
+  camera.fov = 55 + w*30; camera.updateProjectionMatrix();
+
+  // ship heading + banking
+  tmp.copy(shipPos).add(tan2);
+  m4.lookAt(tmp, shipPos, up); q.setFromRotationMatrix(m4);
+  if (first) heading.copy(q); else heading.slerp(q, 0.12);
+  ship.quaternion.copy(heading); ship.position.copy(shipPos);
+  ship.rotateZ(-smx*0.55 - (tan2.x - tan.x)*8 + (RM ? 0 : Math.sin(t*0.7)*0.04));
+  ship.rotateX(smy*0.25);
+
+  // velocity → dust streaks
+  if (first) prevCam.copy(camPos);
+  vel.subVectors(camPos, prevCam).divideScalar(Math.max(dt, 1e-3)).clampLength(0, 45); prevCam.copy(camPos);
+  dustU.uCam.value.copy(camPos);
+  dustU.uVel.value.copy(vel).multiplyScalar(0.05).addScaledVector(tan, 2 + w*60);
+  skyGroup.position.copy(camPos);
+
+  // engines
+  const thrust = 0.75 + Math.min(vel.length()*0.02, 0.6) + w*1.5;
+  flames.forEach(f => { const fl = RM ? 1 : (0.92 + Math.random()*0.16); f.flame.scale.set(1, thrust*fl, 1); f.glow.scale.setScalar(2.4 + thrust*0.9*fl); });
+  navs.forEach(n => n.material.opacity = (Math.sin(t*3.5) > 0.2) ? 1 : 0.15);
+
+  if (!RM) {
+    giant.rotation.y = t*0.01;
+    world.rotation.y = t*0.02;
+    station.userData.spin.rotation.z = t*0.08;
+    station.userData.beacons.forEach((b, i) => b.material.opacity = Math.sin(t*2 + i) > 0.6 ? 1 : 0.1);
+    disk.rotation.z = -t*0.05;
+    if ((frame & 1) === 0) {
+      const d = rocks.userData.data;
+      for (let i = 0; i < d.length; i++) { d[i].r.x += d[i].w*dt*2; d[i].r.y += d[i].w*dt*1.4; q.setFromEuler(d[i].r); m4.compose(d[i].p, q, d[i].s); rocks.setMatrixAt(i, m4); }
+      rocks.instanceMatrix.needsUpdate = true;
+    }
+  }
+  moon.position.set(Math.cos(t*0.05)*78, 18, Math.sin(t*0.05)*78);
+  frame++; first = false;
+  composer ? composer.render() : renderer.render(scene, camera);
+  requestAnimationFrame(loop);
+}
+window.__bootProgress?.(1);
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
